@@ -1,0 +1,198 @@
+openapi: 3.0.0
+info:
+  title: Your API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8080
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /api/v1/login:
+    post:
+      summary: User Login
+      tags:
+        - users
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      format: email
+                    password:
+                      type: string
+                    branch_id:
+                      type: integer
+      responses:
+        '200':
+          description: Successful login
+      security:
+        # - bearerAuth: []
+
+  /api/v1/logout:
+    delete:
+      summary: User Logout
+      tags:
+        - users
+      operationId: logoutUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '204':
+          description: Successful logout
+      security:
+        - bearerAuth: []
+
+  /api/v1/signup:
+    post:
+      summary: User Registration
+      tags:
+        - users
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      format: email
+                    password:
+                      type: string
+                    full_name:
+                      type: string
+                    password_confirmation:
+                      type: string
+      responses:
+        '201':
+          description: User registered successfully
+
+  /api/v1/users/current_user:
+    get:
+      summary: Get Current User
+      tags:
+        - users
+      operationId: getCurrentUser
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+        - bearerAuth: []
+
+
+  /api/v1/kyc/new_customer:
+    post:
+      summary: Create New Customer for KYC
+      tags:
+        - kyc
+      operationId: createNewCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer:
+                  type: object
+                  properties:
+                    introduced_date:
+                      type: string
+                      format: date
+                    branch_id:
+                      type: integer
+                kyc_personal:
+                  type: object
+                  properties:
+                    is_minor:
+                      type: boolean
+                    is_residential:
+                      type: boolean
+                    salutation:
+                      type: string
+                    first_name:
+                      type: string
+                    middle_name:
+                      type: string
+                    last_name:
+                      type: string
+                    gender:
+                      type: string
+                    date_of_birth:
+                      type: string
+                      format: date
+                    maritial_status:
+                      type: string
+                kyc_contacts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      contact_type:
+                        type: string
+                      contact_relation:
+                        type: string
+                      contact_number:
+                        type: string
+                kyc_addresses:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      address_type:
+                        type: string
+                      province:
+                        type: integer
+                      district:
+                        type: integer
+                      mn_vdc:
+                        type: integer
+                      ward_no:
+                        type: integer
+                      street:
+                        type: string
+                      tole_name:
+                        type: string
+      responses:
+        '201':
+          description: Customer created successfully
+        '422':
+          description: Profile Registration failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 422
+                  message:
+                    type: string
+                    example: Profile Registration failed!!
+                  data:
+                    type: array
+                    items:
+                      type: string
+                      example: "First name can't be blank"

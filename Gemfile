@@ -36,8 +36,10 @@ gem "devise"
 gem "devise-jwt"
 gem "jsonapi-serializer"
 
-gem "rswag-api"
+# display Swagger UI
 gem "rswag-ui"
+# make API requests from Swagger UI
+gem "rswag-api"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"

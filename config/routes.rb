@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  # authenticate :user do
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
+  # end"
+
   devise_for :users,
              class_name: "Auth::User",
              path: "/api/v1",
