@@ -7,4 +7,6 @@ class Kyc::KycAddress < ApplicationRecord
 
   enum :address_type, { permanent: "Permanent", temporary: "Temporary", Other: "Other" }, prefix: true, allow_nil: false
   belongs_to :kyc_personal, class_name: "Kyc::KycPersonal"
+  belongs_to :province, class_name: "Core::Province"
+  belongs_to :district, class_name: "Core::District"
 end

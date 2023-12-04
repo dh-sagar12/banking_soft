@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_01_043816) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_04_034341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,53 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_01_043816) do
     t.datetime "updated_at", null: false
     t.index ["branch_id"], name: "index_customers_on_branch_id"
     t.index ["creator_id"], name: "index_customers_on_creator_id"
+  end
+
+  create_table "deposit_int_calc_types", force: :cascade do |t|
+    t.string "type_name", null: false
+    t.bigint "frequency_id", null: false
+    t.boolean "status", default: true
+    t.index ["frequency_id"], name: "index_deposit_int_calc_types_on_frequency_id"
+  end
+
+  create_table "deposit_products", force: :cascade do |t|
+    t.bigint "branch_id", null: false
+    t.string "product_name", null: false
+    t.string "product_name_np", null: false
+    t.string "prefix", null: false
+    t.string "suffix", null: false
+    t.integer "acc_digit", null: false
+    t.string "product_type", null: false
+    t.integer "duration"
+    t.decimal "minimum_balance"
+    t.decimal "interest_rate", null: false
+    t.integer "interest_posting_frequency_id", null: false
+    t.integer "interest_calculation_type_id", null: false
+    t.integer "tran_gl_id", null: false
+    t.integer "interest_expenses_gl_id", null: false
+    t.integer "interest_payable_gl_id", null: false
+    t.integer "tax_gl_id", null: false
+    t.decimal "tax_rate", default: "6.0", null: false
+    t.boolean "is_active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["branch_id"], name: "index_deposit_products_on_branch_id"
+  end
+
+  create_table "districts", force: :cascade do |t|
+    t.string "distring_name", null: false
+    t.bigint "province_id", null: false
+    t.string "np_name", null: false
+    t.string "copomis_code", null: false
+    t.index ["province_id"], name: "index_districts_on_province_id"
+  end
+
+  create_table "frequencies", force: :cascade do |t|
+    t.string "frequency_name", null: false
+    t.string "frequency_code", null: false
+    t.string "frequency_name_np", null: false
+    t.string "schedule_freq_name", null: false
+    t.string "schedule_frequency_code", null: false
   end
 
   create_table "kyc_addresses", force: :cascade do |t|
@@ -99,6 +146,20 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_01_043816) do
     t.index ["customer_id"], name: "index_kyc_personals_on_customer_id"
   end
 
+  create_table "mn_vdcs", force: :cascade do |t|
+    t.bigint "district_id", null: false
+    t.string "municipality_name", null: false
+    t.string "municipality_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["district_id"], name: "index_mn_vdcs_on_district_id"
+  end
+
+  create_table "provinces", force: :cascade do |t|
+    t.string "province_name", null: false
+    t.string "np_name", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -122,8 +183,17 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_01_043816) do
   add_foreign_key "branches", "users", column: "creator_id"
   add_foreign_key "customers", "branches"
   add_foreign_key "customers", "users", column: "creator_id"
+  add_foreign_key "deposit_int_calc_types", "frequencies"
+  add_foreign_key "deposit_products", "branches"
+  add_foreign_key "deposit_products", "deposit_int_calc_types", column: "interest_calculation_type_id"
+  add_foreign_key "deposit_products", "frequencies", column: "interest_posting_frequency_id"
+  add_foreign_key "districts", "provinces"
+  add_foreign_key "kyc_addresses", "districts", column: "district"
   add_foreign_key "kyc_addresses", "kyc_personals"
+  add_foreign_key "kyc_addresses", "mn_vdcs", column: "mn_vdc"
+  add_foreign_key "kyc_addresses", "provinces", column: "province"
   add_foreign_key "kyc_contacts", "kyc_personals"
   add_foreign_key "kyc_personals", "customers"
+  add_foreign_key "mn_vdcs", "districts"
   add_foreign_key "users", "branches"
 end
