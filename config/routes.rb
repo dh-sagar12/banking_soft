@@ -36,8 +36,16 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       namespace :deposit do
+
+        #product
         post "new_product" => "products#create", as: :new_product
         patch "update_product/:id" => "products#update", as: :update_product
+        get "filter_product" => "products#index", as: :all_products
+
+        #account
+        post "new_account" => "accounts#create", as: :new_deposit_account
+        patch "update_account/:id" => "accounts#update", as: :update_account
+        get "filter_account" => "accounts#index", as: :all_accounts
       end
     end
   end

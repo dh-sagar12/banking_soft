@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_04_050637) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_04_084616) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,43 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_050637) do
     t.datetime "updated_at", null: false
     t.index ["branch_id"], name: "index_customers_on_branch_id"
     t.index ["creator_id"], name: "index_customers_on_creator_id"
+  end
+
+  create_table "deposit_accounts", force: :cascade do |t|
+    t.bigint "branch_id", null: false
+    t.date "account_opening_date", null: false
+    t.bigint "customer_id", null: false
+    t.bigint "deposit_product_id", null: false
+    t.integer "account_id", null: false
+    t.string "account_number", null: false
+    t.integer "introducer_id", null: false
+    t.decimal "interest_rate", null: false
+    t.integer "account_duration"
+    t.bigint "interest_frequency_id", null: false
+    t.bigint "interest_nominee_id"
+    t.bigint "account_nominee_id"
+    t.boolean "status", default: true
+    t.date "terminated_on"
+    t.decimal "minimum_balance", default: "0.0", null: false
+    t.decimal "installment_amount"
+    t.bigint "installment_frequency_id"
+    t.bigint "installment_account_id"
+    t.integer "joint_customers", array: true
+    t.string "account_name"
+    t.string "display_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "creator_id", null: false
+    t.integer "last_update_by_id", null: false
+    t.index ["account_nominee_id"], name: "index_deposit_accounts_on_account_nominee_id"
+    t.index ["account_number"], name: "index_deposit_accounts_on_account_number", unique: true
+    t.index ["branch_id"], name: "index_deposit_accounts_on_branch_id"
+    t.index ["customer_id"], name: "index_deposit_accounts_on_customer_id"
+    t.index ["deposit_product_id"], name: "index_deposit_accounts_on_deposit_product_id"
+    t.index ["installment_account_id"], name: "index_deposit_accounts_on_installment_account_id"
+    t.index ["installment_frequency_id"], name: "index_deposit_accounts_on_installment_frequency_id"
+    t.index ["interest_frequency_id"], name: "index_deposit_accounts_on_interest_frequency_id"
+    t.index ["interest_nominee_id"], name: "index_deposit_accounts_on_interest_nominee_id"
   end
 
   create_table "deposit_interest_calc_types", force: :cascade do |t|
@@ -184,6 +221,16 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_050637) do
   add_foreign_key "branches", "users", column: "creator_id"
   add_foreign_key "customers", "branches"
   add_foreign_key "customers", "users", column: "creator_id"
+  add_foreign_key "deposit_accounts", "branches"
+  add_foreign_key "deposit_accounts", "customers"
+  add_foreign_key "deposit_accounts", "deposit_accounts", column: "account_nominee_id"
+  add_foreign_key "deposit_accounts", "deposit_accounts", column: "installment_account_id"
+  add_foreign_key "deposit_accounts", "deposit_accounts", column: "interest_nominee_id"
+  add_foreign_key "deposit_accounts", "deposit_products"
+  add_foreign_key "deposit_accounts", "frequencies", column: "installment_frequency_id"
+  add_foreign_key "deposit_accounts", "frequencies", column: "interest_frequency_id"
+  add_foreign_key "deposit_accounts", "users", column: "creator_id"
+  add_foreign_key "deposit_accounts", "users", column: "last_update_by_id"
   add_foreign_key "deposit_interest_calc_types", "frequencies"
   add_foreign_key "deposit_products", "branches"
   add_foreign_key "deposit_products", "deposit_interest_calc_types", column: "interest_calculation_type_id"

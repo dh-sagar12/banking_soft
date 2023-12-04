@@ -9,7 +9,7 @@ class Deposit::DepositProduct < ApplicationRecord
 
   validates :product_name, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 5 }
   validates :product_name_np, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 5 }
-  validates :prefix, presence: false, uniqueness: { case_sensitive: false }
+  validates :prefix, presence: false, uniqueness: { case_sensitive: false }, allow_nil: true
   validates :suffix, presence: false, uniqueness: { case_sensitive: false }, allow_nil: true
   validates :acc_digit, presence: true
   validates :product_type, presence: true
@@ -24,12 +24,6 @@ class Deposit::DepositProduct < ApplicationRecord
   validate :set_duration_for_normal_product
 
   def validate_duration_for_recurring_and_fixed
-    puts "#" * 100
-
-    puts product_type
-
-    puts "#" * 100
-
     if (product_type.downcase == "recurring" || product_type.downcase == "fixed") && (duration.nil? || duration == 0)
       errors.add(:duration, "Duration is compulsory for Recurring & Fixed products")
     end

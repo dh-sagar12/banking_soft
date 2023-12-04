@@ -2,6 +2,19 @@ class Api::V1::Deposit::ProductsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_article, only: [:update]
 
+  def index
+    @products = Deposit::DepositProduct.all.paginate(page: params[:page], per_page: params[:per_page])
+    render json: {
+      status: 200,
+      message: "Data Fetched",
+      total_pages: @products.total_pages,
+      current_page: @products.current_page,
+      total_entries: @products.total_entries,
+      data: Deposit::ProductSerializer.new(@products).serializable_hash[:data],
+
+    }
+  end
+
   def create
     @product = Deposit::DepositProduct.new(set_product_data)
     @product.creator = current_user
