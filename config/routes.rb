@@ -32,4 +32,13 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  namespace :api do
+    namespace :v1 do
+      namespace :deposit do
+        post "new_product" => "products#create", as: :new_product
+        patch "update_product/:id" => "products#update", as: :update_product
+      end
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_04_034341) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_04_050637) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -53,19 +53,19 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_034341) do
     t.index ["creator_id"], name: "index_customers_on_creator_id"
   end
 
-  create_table "deposit_int_calc_types", force: :cascade do |t|
+  create_table "deposit_interest_calc_types", force: :cascade do |t|
     t.string "type_name", null: false
     t.bigint "frequency_id", null: false
     t.boolean "status", default: true
-    t.index ["frequency_id"], name: "index_deposit_int_calc_types_on_frequency_id"
+    t.index ["frequency_id"], name: "index_deposit_interest_calc_types_on_frequency_id"
   end
 
   create_table "deposit_products", force: :cascade do |t|
     t.bigint "branch_id", null: false
     t.string "product_name", null: false
     t.string "product_name_np", null: false
-    t.string "prefix", null: false
-    t.string "suffix", null: false
+    t.string "prefix"
+    t.string "suffix"
     t.integer "acc_digit", null: false
     t.string "product_type", null: false
     t.integer "duration"
@@ -81,6 +81,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_034341) do
     t.boolean "is_active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "creator_id"
     t.index ["branch_id"], name: "index_deposit_products_on_branch_id"
   end
 
@@ -183,10 +184,11 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_034341) do
   add_foreign_key "branches", "users", column: "creator_id"
   add_foreign_key "customers", "branches"
   add_foreign_key "customers", "users", column: "creator_id"
-  add_foreign_key "deposit_int_calc_types", "frequencies"
+  add_foreign_key "deposit_interest_calc_types", "frequencies"
   add_foreign_key "deposit_products", "branches"
-  add_foreign_key "deposit_products", "deposit_int_calc_types", column: "interest_calculation_type_id"
+  add_foreign_key "deposit_products", "deposit_interest_calc_types", column: "interest_calculation_type_id"
   add_foreign_key "deposit_products", "frequencies", column: "interest_posting_frequency_id"
+  add_foreign_key "deposit_products", "users", column: "creator_id"
   add_foreign_key "districts", "provinces"
   add_foreign_key "kyc_addresses", "districts", column: "district"
   add_foreign_key "kyc_addresses", "kyc_personals"

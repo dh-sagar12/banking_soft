@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Your API
+  title: Core Banking Software APIs
   version: 1.0.0
 servers:
   - url: http://127.0.0.1:8080
@@ -196,3 +196,189 @@ paths:
                     items:
                       type: string
                       example: "First name can't be blank"
+
+
+  /api/v1/deposit/products:
+    post:
+      summary: Create Deposit Product
+      tags:
+        - deposit
+      operationId: createDepositProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deposit_product:
+                  type: object
+                  properties:
+                    branch_id:
+                      type: integer
+                    product_name:
+                      type: string
+                    product_name_np:
+                      type: string
+                    prefix:
+                      type: string
+                    suffix:
+                      type: string
+                    acc_digit:
+                      type: integer
+                    product_type:
+                      type: string
+                    duration:
+                      type: integer
+                    minimum_balance:
+                      type: number
+                    interest_rate:
+                      type: number
+                    interest_posting_frequency_id:
+                      type: integer
+                    interest_calculation_type_id:
+                      type: integer
+                    tran_gl_id:
+                      type: integer
+                    interest_expenses_gl_id:
+                      type: integer
+                    interest_payable_gl_id:
+                      type: integer
+                    tax_gl_id:
+                      type: integer
+                    tax_rate:
+                      type: number
+                    is_active:
+                      type: boolean
+      responses:
+        '201':
+          description: Product Creation Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Product Creation Success
+                  data:
+                    type: object
+
+        '422':
+          description: Product Creation Failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 422
+                  message:
+                    type: string
+                    example: Product Creation Failed!!
+                  data:
+                    type: array
+                    items:
+                      type: string
+                      example: "Product name can't be blank"
+
+  /api/v1/deposit/products/{id}:
+    put:
+      summary: Update Deposit Product
+      tags:
+        - deposit
+      operationId: updateDepositProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the deposit product to be updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deposit_product:
+                  type: object
+                  properties:
+                    branch_id:
+                      type: integer
+                    product_name:
+                      type: string
+                    product_name_np:
+                      type: string
+                    prefix:
+                      type: string
+                    suffix:
+                      type: string
+                    acc_digit:
+                      type: integer
+                    product_type:
+                      type: string
+                    duration:
+                      type: integer
+                    minimum_balance:
+                      type: number
+                    interest_rate:
+                      type: number
+                    interest_posting_frequency_id:
+                      type: integer
+                    interest_calculation_type_id:
+                      type: integer
+                    tran_gl_id:
+                      type: integer
+                    interest_expenses_gl_id:
+                      type: integer
+                    interest_payable_gl_id:
+                      type: integer
+                    tax_gl_id:
+                      type: integer
+                    tax_rate:
+                      type: number
+                    is_active:
+                      type: boolean
+      responses:
+        '200':
+          description: Product Updated Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Product Updated Successfully
+                  data:
+                    type: object
+                    properties:
+                      deposit_product:
+                        type: object
+        '422':
+          description: Product Updated Failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 422
+                  message:
+                    type: string
+                    example: Product Updated Failed
+                  data:
+                    type: array
+                    items:
+                      type: string
+                      example: "Minimum balance must be greater than or equal to 0"

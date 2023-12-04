@@ -14,4 +14,5 @@ class Auth::User < ApplicationRecord
   has_many :branches, through: :branch_policies
   belongs_to :branch
   has_many :customers, class_name: "Kyc::Customer", foreign_key: "creator_id"
+  has_many :deposit_products, class_name: "Deposit::DepositProduct", foreign_key: "creator_id"
 end
