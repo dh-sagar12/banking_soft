@@ -49,4 +49,14 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  namespace :api do
+    namespace :v1 do
+      namespace :core do
+
+        #branches
+        get "get_branches" => "branches#index", as: :all_branches
+      end
+    end
+  end
 end

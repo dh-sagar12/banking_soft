@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_04_084616) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_04_104816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -182,6 +182,18 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_084616) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["customer_id"], name: "index_kyc_personals_on_customer_id"
+  end
+
+  create_table "master_ledgers", force: :cascade do |t|
+    t.string "master_code", null: false
+    t.string "account_name", null: false
+    t.string "account_name_np", null: false
+    t.string "account_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_name"], name: "index_master_ledgers_on_account_name", unique: true
+    t.index ["account_name_np"], name: "index_master_ledgers_on_account_name_np", unique: true
+    t.index ["master_code"], name: "index_master_ledgers_on_master_code", unique: true
   end
 
   create_table "mn_vdcs", force: :cascade do |t|
