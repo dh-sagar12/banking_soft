@@ -6,11 +6,14 @@ class Api::V1::Kyc::CustomersController < ApplicationController
       # creating customer first
       @customer = Kyc::Customer.new(set_customer)
       @customer.creator = current_user
+
       @customer.save
+
       # inserting data into kyc personal getting reference of customer into customer_id
-      @kyc_personal = @customer.kyc_personals.build(set_kyc_personal)
+      # @kyc_personal = @customer.kyc_personals.(set_kyc_personal)
+      @kyc_personal = Kyc::KycPersonal.new(set_kyc_personal)
+      @kyc_personal.customer = @customer
       @kyc_personal.save
-      # puts "kyc_personals ", @kyc_personal
 
       # # inserting kyc_contact if any
       if params.key?(:kyc_contacts) && !params[:kyc_contacts].blank?
@@ -53,12 +56,36 @@ class Api::V1::Kyc::CustomersController < ApplicationController
         raise ActiveRecord::Rollback
       end
     end
-  rescue StandardError => e
+    # rescue StandardError => e
+    #   render json: {
+    #            status: 500,
+    #            message: "Profile Registration failed!!",
+    #            data: [e.cause.nil? ? e.message : e.cause],
+    #          }, status: :internal_server_error
+  end
+
+  def index
+    # @customers = Kyc::Customer.all.paginate(page: params[:page], per_page: params[:per_page])
+    @customers = Kyc::Customer.includes(kyc_personals: [:kyc_contacts, :kyc_addresses]).paginate(page: params[:page], per_page: params[:per_page])
+
+    response_data = @customers.map do |cust|
+      kyc_personal = cust.kyc_personals
+      {
+        customer: cust,
+        kyc_personal: kyc_personal,
+        kyc_contacts: kyc_personal.kyc_contacts,
+        kyc_addresses: kyc_personal.kyc_addresses,
+      }
+    end
     render json: {
-             status: 500,
-             message: "Profile Registration failed!!",
-             data: [e.cause.nil? ? e.message : e.cause],
-           }, status: :internal_server_error
+      status: 200,
+      message: "Data Fetched",
+      total_pages: @customers.total_pages,
+      current_page: @customers.current_page,
+      total_entries: @customers.total_entries,
+      data: response_data,
+
+    }
   end
 
   private
@@ -81,6 +108,6 @@ class Api::V1::Kyc::CustomersController < ApplicationController
   end
 
   def set_kyc_address
-    params.require(:kyc_addresses).map { |address| address.permit(:address_type, :province, :district, :mn_vdc, :ward_no, :street, :tole_name) }
+    params.require(:kyc_addresses).map { |address| address.permit(:address_type, :province_id, :district_id, :mn_vdc_id, :ward_no, :street, :tole_name) }
   end
 end

@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :kyc do
         post "new_customer" => "customers#create", as: :new_customer
+        get "filter_customers" => "customers#index", as: :all_customer
       end
     end
   end
@@ -56,6 +57,7 @@ Rails.application.routes.draw do
 
         #branches
         get "get_branches" => "branches#index", as: :all_branches
+        get "get_addresses" => "addresses#retrive_district_mn_vdc_province", as: :all_addresses
       end
     end
   end

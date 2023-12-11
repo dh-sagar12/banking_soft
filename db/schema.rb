@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_04_104816) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_11_172413) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -123,7 +123,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_104816) do
   end
 
   create_table "districts", force: :cascade do |t|
-    t.string "distring_name", null: false
+    t.string "district_name", null: false
     t.bigint "province_id", null: false
     t.string "np_name", null: false
     t.string "copomis_code", null: false
@@ -141,9 +141,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_104816) do
   create_table "kyc_addresses", force: :cascade do |t|
     t.bigint "kyc_personal_id", null: false
     t.string "address_type", null: false
-    t.integer "province", null: false
-    t.integer "district", null: false
-    t.integer "mn_vdc", null: false
+    t.integer "province_id", null: false
+    t.integer "district_id", null: false
+    t.integer "mn_vdc_id", null: false
     t.integer "ward_no", null: false
     t.string "street"
     t.string "tole_name"
@@ -249,10 +249,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_104816) do
   add_foreign_key "deposit_products", "frequencies", column: "interest_posting_frequency_id"
   add_foreign_key "deposit_products", "users", column: "creator_id"
   add_foreign_key "districts", "provinces"
-  add_foreign_key "kyc_addresses", "districts", column: "district"
+  add_foreign_key "kyc_addresses", "districts"
   add_foreign_key "kyc_addresses", "kyc_personals"
-  add_foreign_key "kyc_addresses", "mn_vdcs", column: "mn_vdc"
-  add_foreign_key "kyc_addresses", "provinces", column: "province"
+  add_foreign_key "kyc_addresses", "mn_vdcs"
+  add_foreign_key "kyc_addresses", "provinces"
   add_foreign_key "kyc_contacts", "kyc_personals"
   add_foreign_key "kyc_personals", "customers"
   add_foreign_key "mn_vdcs", "districts"

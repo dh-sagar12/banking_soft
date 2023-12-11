@@ -9,4 +9,5 @@ class Kyc::KycAddress < ApplicationRecord
   belongs_to :kyc_personal, class_name: "Kyc::KycPersonal"
   belongs_to :province, class_name: "Core::Province"
   belongs_to :district, class_name: "Core::District"
+  belongs_to :mn_vdc, class_name: "Core::MnVdc"
 end
