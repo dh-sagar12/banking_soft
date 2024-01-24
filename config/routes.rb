@@ -61,4 +61,16 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  namespace :api do
+    namespace :v1 do
+      namespace :transaction do
+
+        #branches
+        post "new_group_ledger" => "ledgers#create_group_ledgers", as: :new_group_ledger
+        get "all_master_ledger" => "ledgers#get_master_ledgers", as: :get_master_ledgers
+        get "all_group_ledger" => "ledgers#get_group_ledgers", as: :get_group_ledgers
+      end
+    end
+  end
 end

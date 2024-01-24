@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_11_172413) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_12_144349) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -138,6 +138,17 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_11_172413) do
     t.string "schedule_frequency_code", null: false
   end
 
+  create_table "group_ledgers", force: :cascade do |t|
+    t.string "account_code", null: false
+    t.string "account_name", null: false
+    t.string "account_name_np", null: false
+    t.boolean "is_active", default: true, null: false
+    t.bigint "master_ledger_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["master_ledger_id"], name: "index_group_ledgers_on_master_ledger_id"
+  end
+
   create_table "kyc_addresses", force: :cascade do |t|
     t.bigint "kyc_personal_id", null: false
     t.string "address_type", null: false
@@ -249,6 +260,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_11_172413) do
   add_foreign_key "deposit_products", "frequencies", column: "interest_posting_frequency_id"
   add_foreign_key "deposit_products", "users", column: "creator_id"
   add_foreign_key "districts", "provinces"
+  add_foreign_key "group_ledgers", "master_ledgers"
   add_foreign_key "kyc_addresses", "districts"
   add_foreign_key "kyc_addresses", "kyc_personals"
   add_foreign_key "kyc_addresses", "mn_vdcs"
