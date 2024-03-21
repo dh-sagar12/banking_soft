@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_12_144349) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_21_030849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -221,6 +221,21 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_12_144349) do
     t.string "np_name", null: false
   end
 
+  create_table "transaction_ledgers", force: :cascade do |t|
+    t.string "account_code", null: false
+    t.string "account_name", null: false
+    t.string "account_name_np", null: false
+    t.boolean "is_active", default: true, null: false
+    t.bigint "branch_id"
+    t.bigint "group_ledger_id", null: false
+    t.bigint "creator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["branch_id"], name: "index_transaction_ledgers_on_branch_id"
+    t.index ["creator_id"], name: "index_transaction_ledgers_on_creator_id"
+    t.index ["group_ledger_id"], name: "index_transaction_ledgers_on_group_ledger_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -268,5 +283,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_12_144349) do
   add_foreign_key "kyc_contacts", "kyc_personals"
   add_foreign_key "kyc_personals", "customers"
   add_foreign_key "mn_vdcs", "districts"
+  add_foreign_key "transaction_ledgers", "branches"
+  add_foreign_key "transaction_ledgers", "group_ledgers"
+  add_foreign_key "transaction_ledgers", "users", column: "creator_id"
   add_foreign_key "users", "branches"
 end
