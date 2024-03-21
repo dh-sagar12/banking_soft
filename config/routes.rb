@@ -68,8 +68,10 @@ Rails.application.routes.draw do
 
         #branches
         post "new_group_ledger" => "ledgers#create_group_ledgers", as: :new_group_ledger
+        post "new_transaction_ledger" => "ledgers#create_transaction_ledgers", as: :new_transaction_ledger
         get "all_master_ledger" => "ledgers#get_master_ledgers", as: :get_master_ledgers
         get "all_group_ledger" => "ledgers#get_group_ledgers", as: :get_group_ledgers
+        get "all_transaction_ledger" => "ledgers#get_transaction_ledgers", as: :get_transaction_ledgers
       end
     end
   end
